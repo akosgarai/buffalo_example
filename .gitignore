@@ -12,3 +12,4 @@ buffalo_example
 .vscode/
 .grifter/
 .env
+*.swp
