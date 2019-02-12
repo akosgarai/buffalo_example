@@ -1,0 +1,6 @@
+- id: "administrator.created.success"
+  translation: "Administrator was successfully created."
+- id: "administrator.updated.success"
+  translation: "Administrator was successfully updated."
+- id: "administrator.destroyed.success"
+  translation: "Administrator was successfully destroyed."

@@ -1,0 +1,8 @@
+<div class="page-header">
+  <h1>New Administrator</h1>
+</div>
+
+<%= form_for(administrator, {action: administratorsPath(), method: "POST"}) { %>
+  <%= partial("administrators/form.html") %>
+  <a href="<%= administratorsPath() %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

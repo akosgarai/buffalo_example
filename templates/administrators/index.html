@@ -1,0 +1,37 @@
+<div class="page-header">
+  <h1>Administrators</h1>
+</div>
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= newAdministratorsPath() %>" class="btn btn-primary">Create New Administrator</a></li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+  <th>Name</th>
+    <th>Username</th>
+    <th>Password</th>
+    <th>Email</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (administrator) in administrators { %>
+      <tr>
+      <td><%= administrator.Name %></td>
+        <td><%= administrator.Username %></td>
+        <td><%= administrator.Password %></td>
+        <td><%= administrator.Email %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= administratorPath({ administrator_id: administrator.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editAdministratorPath({ administrator_id: administrator.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= administratorPath({ administrator_id: administrator.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>
