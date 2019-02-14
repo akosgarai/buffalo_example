@@ -1,5 +1,6 @@
 <%= f.InputTag("Name") %>
 <%= f.InputTag("Username") %>
-<%= f.InputTag("Password") %>
 <%= f.InputTag("Email") %>
+<%= f.InputTag("Password", {type: "password", name: "Pwd"}) %>
+<%= f.InputTag("PasswordConfirmation", {type: "password", name: "PwdConfirmation" }) %>
 <button class="btn btn-success" role="submit">Save</button>

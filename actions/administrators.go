@@ -94,7 +94,7 @@ func (v AdministratorsResource) Create(c buffalo.Context) error {
 	}
 
 	// Validate the data from the html form
-	verrs, err := tx.ValidateAndCreate(administrator)
+	verrs, err := administrator.Create(tx)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -107,6 +107,7 @@ func (v AdministratorsResource) Create(c buffalo.Context) error {
 		// correct the input.
 		return c.Render(422, r.Auto(c, administrator))
 	}
+	c.Session().Set("current_user_id", administrator.ID)
 
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Administrator was created successfully")
