@@ -19,9 +19,9 @@
   <div class="sign-form">
     <h1>Sign In</h1>
 
-    <%= form_for(user, {action: signinPath()}) { %>
+    <%= form_for(admin, {action: loginPath()}) { %>
       <%= f.InputTag("Email") %>
-      <%= f.InputTag("Password", {type: "password"}) %>
+      <%= f.InputTag("Pwd", {type: "password"}) %>
       <button class="btn btn-success">Sign In!</button>
     <% } %>
   </div>
