@@ -1,21 +1,5 @@
-<style>
-  .auth-center{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-  .sign-in-btn{
-    margin-right: 10px;
-  }
-</style>
+<h1>Administrators</h1>
 
-<div class="auth-center">
-  <%= if (current_user) { %>
-    <h1><%= current_user.Email %></h1>
-    <a href="/signout" data-method="DELETE">Sign Out</a>
-  <% } else { %>
-    <a href="/signin" class="btn btn-primary">Sign In</a>
-    <a href="/users/new" class="btn btn-success">Register</a>
-  <% } %>
-</div>
+<p>
+This is the dashboard. It will contain links to other modules (based on the admin's privs).
+</p>
