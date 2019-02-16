@@ -61,9 +61,9 @@ func App() *buffalo.App {
 		app.GET("/", HomeHandler)
 		app.GET("/login", LoginHandler)
 
+		app.Use(SetCurrentAdmin)
+		app.Use(AdminAuthorize)
 		app.Resource("/administrators", AdministratorsResource{})
-		app.Use(SetCurrentUser)
-		app.Use(Authorize)
 		app.GET("/users/new", UsersNew)
 		app.POST("/users", UsersCreate)
 		app.GET("/signin", AuthNew)

@@ -107,7 +107,7 @@ func (v AdministratorsResource) Create(c buffalo.Context) error {
 		// correct the input.
 		return c.Render(422, r.Auto(c, administrator))
 	}
-	c.Session().Set("current_user_id", administrator.ID)
+	c.Session().Set("current_admin_id", administrator.ID)
 
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Administrator was created successfully")
@@ -203,4 +203,39 @@ func (v AdministratorsResource) Destroy(c buffalo.Context) error {
 
 	// Redirect to the administrators index page
 	return c.Render(200, r.Auto(c, administrator))
+}
+
+// SetCurrentAdmin attempts to find a user based on the current_admin_id
+// in the session. If one is found it is set on the context.
+func SetCurrentAdmin(next buffalo.Handler) buffalo.Handler {
+	return func(c buffalo.Context) error {
+		if uid := c.Session().Get("current_admin_id"); uid != nil {
+			a := &models.Administrator{}
+			tx := c.Value("tx").(*pop.Connection)
+			err := tx.Find(a, uid)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+			c.Set("current_admin", a)
+		}
+		return next(c)
+	}
+}
+
+// AdminAuthorize require an admin be logged in before accessing a route
+func AdminAuthorize(next buffalo.Handler) buffalo.Handler {
+	return func(c buffalo.Context) error {
+		if uid := c.Session().Get("current_admin_id"); uid == nil {
+			c.Session().Set("redirectURL", c.Request().URL.String())
+
+			err := c.Session().Save()
+			if err != nil {
+				return errors.WithStack(err)
+			}
+
+			c.Flash().Add("danger", "You must be authorized to see that page")
+			return c.Redirect(302, "/login")
+		}
+		return next(c)
+	}
 }
