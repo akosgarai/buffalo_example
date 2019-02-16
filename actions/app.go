@@ -65,9 +65,6 @@ func App() *buffalo.App {
 		app.Use(SetCurrentAdmin)
 		app.Use(AdminAuthorize)
 		app.Resource("/administrators", AdministratorsResource{})
-		//app.GET("/users/new", UsersNew)
-		//app.POST("/users", UsersCreate)
-		//app.DELETE("/signout", AuthDestroy)
 		app.Middleware.Skip(AdminAuthorize, AuthNew, AuthCreate)
 		app.ServeFiles("/", assetsBox) // serve files from the public directory
 	}
