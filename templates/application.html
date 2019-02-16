@@ -11,6 +11,11 @@
   </head>
   <body>
 
+    <%= if (current_admin) { %>
+        <div class="menu">
+            <a href="<%= logoutPath() %>" />logout</a>
+        </div>
+    <% } %>
     <div class="container">
       <%= partial("flash.html") %>
       <%= yield %>

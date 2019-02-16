@@ -61,6 +61,7 @@ func App() *buffalo.App {
 		app.GET("/", HomeHandler)
 		app.GET("/login", AuthNew)
 		app.POST("/login", AuthCreate)
+		app.GET("/logout", AuthDestroy)
 
 		app.Use(SetCurrentAdmin)
 		app.Use(AdminAuthorize)
