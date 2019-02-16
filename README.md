@@ -16,6 +16,13 @@ Ok, so you've edited the "database.yml" file and started postgres, now Buffalo c
 
 	$ buffalo db create -a
 
+To have a default admin user with admin@admin.com as email and admin as password, run the following command in the database:
+```bash
+buffalo_example_development=# insert into administrators (id, name, username, password, email, created_at, updated_at) VALUES('90c5ab08-2a50-4fc3-b500-ea70ae6a038b','admin user', 'adminuser123', '$2a$10$zm/lRrBz8kObRwHcF1erHOc6Ac2o7Cog.KP8fVen388EtvNaASJHW', 'admin@admin.com', NOW(), NOW())
+;
+```
+
+
 ## Starting the Application
 
 Buffalo ships with a command that will watch your application and automatically rebuild the Go binary and any assets for you. To do that run the "buffalo dev" command:
