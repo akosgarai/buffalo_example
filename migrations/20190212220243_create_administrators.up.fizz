@@ -5,3 +5,4 @@ create_table("administrators") {
 	t.Column("password", "string", {})
 	t.Column("email", "string", {})
 }
+sql("insert into administrators (id, name, username, password, email, created_at, updated_at) VALUES('90c5ab08-2a50-4fc3-b500-ea70ae6a038b','admin user', 'adminuser123', '$2a$10$zm/lRrBz8kObRwHcF1erHOc6Ac2o7Cog.KP8fVen388EtvNaASJHW', 'admin@admin.com', NOW(), NOW());")
