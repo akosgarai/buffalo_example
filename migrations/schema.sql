@@ -50,6 +50,21 @@ CREATE TABLE public.administrators (
 ALTER TABLE public.administrators OWNER TO buffalo;
 
 --
+-- Name: privileges; Type: TABLE; Schema: public; Owner: buffalo
+--
+
+CREATE TABLE public.privileges (
+    id uuid NOT NULL,
+    label text NOT NULL,
+    description text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.privileges OWNER TO buffalo;
+
+--
 -- Name: schema_migration; Type: TABLE; Schema: public; Owner: buffalo
 --
 
@@ -81,6 +96,14 @@ ALTER TABLE public.users OWNER TO buffalo;
 
 ALTER TABLE ONLY public.administrators
     ADD CONSTRAINT administrators_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: privileges_pkey; Type: CONSTRAINT; Schema: public; Owner: buffalo
+--
+
+ALTER TABLE ONLY public.privileges
+    ADD CONSTRAINT privileges_pkey PRIMARY KEY (id);
 
 
 --
