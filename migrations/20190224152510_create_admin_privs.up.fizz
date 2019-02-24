@@ -1,0 +1,13 @@
+create_table("admin_privs") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("administrator_id", "uuid", {})
+	t.Column("privilege_id", "uuid", {})
+        t.ForeignKey("administrator_id", {"administrators": ["id"]}, {"on_delete": "cascade"})
+        t.ForeignKey("privilege_id", {"privileges": ["id"]}, {"on_delete": "cascade"})
+}
+sql("insert into administrators (id, name, username, password, email, created_at, updated_at) VALUES('87dcc34d-e3de-4c97-9a6a-12ff480536cb','admin1', 'adminuser1', '$2a$10$zm/lRrBz8kObRwHcF1erHOc6Ac2o7Cog.KP8fVen388EtvNaASJHW', 'admin+userpriv@admin.com', NOW(), NOW());")
+sql("insert into administrators (id, name, username, password, email, created_at, updated_at) VALUES('09116452-e64a-4326-a895-ddaf9ff08861','admin2', 'adminuser2', '$2a$10$zm/lRrBz8kObRwHcF1erHOc6Ac2o7Cog.KP8fVen388EtvNaASJHW', 'admin+privpriv@admin.com', NOW(), NOW());")
+sql("insert into admin_privs (id, administrator_id, privilege_id, created_at, updated_at) VALUES('34a5213c-32d8-405d-8fd9-98ffe5542780','90c5ab08-2a50-4fc3-b500-ea70ae6a038b', 'd65b85e0-a5ac-492a-92c9-9040bba1a981', NOW(), NOW());")
+sql("insert into admin_privs (id, administrator_id, privilege_id, created_at, updated_at) VALUES('d2390dd0-655c-4bcf-aafc-e7b1dc2a49af','90c5ab08-2a50-4fc3-b500-ea70ae6a038b', '3d41e152-7f33-49e6-829e-411446d495e8', NOW(), NOW());")
+sql("insert into admin_privs (id, administrator_id, privilege_id, created_at, updated_at) VALUES('28971168-1f4a-459b-8a02-4c0682f23b6b','09116452-e64a-4326-a895-ddaf9ff08861', 'd65b85e0-a5ac-492a-92c9-9040bba1a981', NOW(), NOW());")
+sql("insert into admin_privs (id, administrator_id, privilege_id, created_at, updated_at) VALUES('9b878111-dc4c-4b3e-8146-998462597486','87dcc34d-e3de-4c97-9a6a-12ff480536cb', '3d41e152-7f33-49e6-829e-411446d495e8', NOW(), NOW());")
