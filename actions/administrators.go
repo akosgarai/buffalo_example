@@ -66,6 +66,7 @@ func (v AdministratorsResource) Show(c buffalo.Context) error {
 	if err := tx.Find(administrator, c.Param("administrator_id")); err != nil {
 		return c.Error(404, err)
 	}
+	tx.Load(administrator)
 
 	return c.Render(200, r.Auto(c, administrator))
 }

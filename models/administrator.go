@@ -24,6 +24,8 @@ type Administrator struct {
 
 	Pwd             string `json:"-" db:"-"`
 	PwdConfirmation string `json:"-" db:"-"`
+
+	Privs Privileges `many_to_many:"admin_privs"`
 }
 
 // Create wraps up the pattern of encrypting the password and
