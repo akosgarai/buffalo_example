@@ -17,3 +17,11 @@
 <p>
   <strong>Email</strong>: <%= administrator.Email %>
 </p>
+<div>
+<strong>Privs</strong>:
+    <ul>
+    <%= for (priv) in administrator.Privs { %>
+        <li> <%= priv.Label %> - <%= priv.Description %></li>
+    <% } %>
+    </ul>
+</div>

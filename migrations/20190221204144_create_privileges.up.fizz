@@ -1,0 +1,7 @@
+create_table("privileges") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("label", "text", {})
+	t.Column("description", "text", {})
+}
+sql("insert into privileges (id, label, description, created_at, updated_at) VALUES('d65b85e0-a5ac-492a-92c9-9040bba1a981','Privileges', 'Options to grant or revoke privileges for an admin', NOW(), NOW());")
+sql("insert into privileges (id, label, description, created_at, updated_at) VALUES('3d41e152-7f33-49e6-829e-411446d495e8','Users', 'Option to manage the administrators in the system.', NOW(), NOW());")
