@@ -3,6 +3,8 @@ package actions
 import (
 	"github.com/gobuffalo/buffalo/render"
 	"github.com/gobuffalo/packr"
+
+	"github.com/akosgarai/buffalo_example/models"
 )
 
 var r *render.Engine
@@ -22,6 +24,14 @@ func init() {
 			// uncomment for non-Bootstrap form helpers:
 			// "form":     plush.FormHelper,
 			// "form_for": plush.FormForHelper,
+			"adminHasPrivFor": func(privs models.Privileges, priv string) bool {
+				for _, i := range privs {
+					if i.Label == priv {
+						return true
+					}
+				}
+				return false
+			},
 		},
 	})
 }
