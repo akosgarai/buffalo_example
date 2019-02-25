@@ -4,8 +4,10 @@
 
 <ul class="list-unstyled list-inline">
   <li class="list-inline-item"><a href="<%= administratorsPath() %>" class="btn btn-info">Back to all Administrators</a></li>
+  <%= if (adminHasPrivFor(current_admin.Privs, "Users")) { %>
   <li class="list-inline-item"><a href="<%= editAdministratorPath({ administrator_id: administrator.ID })%>" class="btn btn-warning">Edit</a></li>
   <li class="list-inline-item"><a href="<%= administratorPath({ administrator_id: administrator.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+  <% } %>
 </ul>
 
 <p>
