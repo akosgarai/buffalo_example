@@ -217,6 +217,7 @@ func SetCurrentAdmin(next buffalo.Handler) buffalo.Handler {
 			if err != nil {
 				return errors.WithStack(err)
 			}
+			tx.Load(a)
 			c.Set("current_admin", a)
 		}
 		return next(c)
