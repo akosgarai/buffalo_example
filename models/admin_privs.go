@@ -14,7 +14,7 @@ type AdminPriv struct {
 	CreatedAt       time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at" db:"updated_at"`
 	AdministratorID uuid.UUID `json:"administrator_id" db:"administrator_id"`
-	PrivilegeID     uuid.UUID `json:"privilege_id" db:"privilege_id"`
+	PrivilegeID     uuid.UUID `json:"privilege_id" db:"privilege_id" form:"privilege_id"`
 }
 
 // String is not required by pop and may be deleted

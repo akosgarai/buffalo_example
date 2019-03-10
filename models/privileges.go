@@ -11,7 +11,7 @@ import (
 )
 
 type Privilege struct {
-	ID          uuid.UUID `json:"id" db:"id"`
+	ID          uuid.UUID `json:"privilege_id" db:"id" form:"privilege_id"`
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
 	Label       string    `json:"label" db:"label"`

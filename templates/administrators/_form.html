@@ -3,4 +3,7 @@
 <%= f.InputTag("Email") %>
 <%= f.InputTag("Password", {type: "password", name: "Pwd"}) %>
 <%= f.InputTag("PasswordConfirmation", {type: "password", name: "PwdConfirmation" }) %>
+<%= if (adminHasPrivFor(current_admin.Privs, "Privileges")) { %>
+    <%= partial("administrators/priv_form.html") %>
+<% } %>
 <button class="btn btn-success" role="submit">Save</button>

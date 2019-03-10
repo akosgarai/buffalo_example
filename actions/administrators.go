@@ -74,12 +74,48 @@ func (v AdministratorsResource) Show(c buffalo.Context) error {
 // New renders the form for creating a new Administrator.
 // This function is mapped to the path GET /administrators/new
 func (v AdministratorsResource) New(c buffalo.Context) error {
+	// Get the DB connection from the context
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return errors.WithStack(errors.New("no transaction found"))
+	}
+	// Allocate empty privileges
+	privileges := &models.Privileges{}
+	// Get all privs with pop
+	tx.All(privileges)
+	// Pass it to context
+	c.Set("privileges", privileges)
 	return c.Render(200, r.Auto(c, &models.Administrator{}))
 }
 
 // Create adds a Administrator to the DB. This function is mapped to the
 // path POST /administrators
 func (v AdministratorsResource) Create(c buffalo.Context) error {
+
+	// Get the DB connection from the context
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return errors.WithStack(errors.New("no transaction found"))
+	}
+
+	// Allocate empty privileges
+	var privileges models.Privileges
+	req := c.Request()
+	if err := req.ParseForm(); err == nil {
+		for k, v := range req.Form {
+			if k != "privilege_id" {
+				continue
+			}
+			for _, vv := range v {
+				priv := models.Privilege{}
+				err := tx.Find(&priv, vv)
+				if err == nil {
+					privileges = append(privileges, priv)
+				}
+			}
+		}
+	}
+
 	// Allocate an empty Administrator
 	administrator := &models.Administrator{}
 
@@ -88,10 +124,9 @@ func (v AdministratorsResource) Create(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
-	// Get the DB connection from the context
-	tx, ok := c.Value("tx").(*pop.Connection)
-	if !ok {
-		return errors.WithStack(errors.New("no transaction found"))
+	// if we have privs in the request, we need to add it to the admin struct.
+	if len(privileges) > 0 {
+		administrator.Privs = privileges
 	}
 
 	// Validate the data from the html form
@@ -108,7 +143,8 @@ func (v AdministratorsResource) Create(c buffalo.Context) error {
 		// correct the input.
 		return c.Render(422, r.Auto(c, administrator))
 	}
-	c.Session().Set("current_admin_id", administrator.ID)
+	// don't need to update the admin session.
+	//c.Session().Set("current_admin_id", administrator.ID)
 
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Administrator was created successfully")
@@ -132,6 +168,13 @@ func (v AdministratorsResource) Edit(c buffalo.Context) error {
 	if err := tx.Find(administrator, c.Param("administrator_id")); err != nil {
 		return c.Error(404, err)
 	}
+	tx.Load(administrator)
+	// Allocate empty privileges
+	privileges := &models.Privileges{}
+	// Get all privs with pop
+	tx.All(privileges)
+	// Pass it to context
+	c.Set("privileges", privileges)
 
 	return c.Render(200, r.Auto(c, administrator))
 }

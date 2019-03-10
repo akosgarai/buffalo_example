@@ -1,0 +1,7 @@
+<p>
+Setup privileges
+</p>
+<pre><%= privileges %></pre>
+    <%= for (privilege) in privileges { %>
+        <%= f.CheckboxTag("privilege_id", {label: privilege.Label, checked: privilege.ID, id:privilege.ID}) %>
+    <% } %>
