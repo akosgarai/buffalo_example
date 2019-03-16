@@ -4,6 +4,7 @@ import (
 	"github.com/akosgarai/buffalo_example/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/uuid"
 	"github.com/pkg/errors"
 )
 
@@ -199,10 +200,39 @@ func (v AdministratorsResource) Update(c buffalo.Context) error {
 	if err := c.Bind(administrator); err != nil {
 		return errors.WithStack(err)
 	}
-
+	// Allocate empty privileges
+	privileges := models.AdminPrivs{
+		AdministratorID: administrator.ID,
+	}
+	req := c.Request()
+	if err := req.ParseForm(); err == nil {
+		for k, v := range req.Form {
+			if k != "privilege_id" {
+				continue
+			}
+			for _, vv := range v {
+				id, err := uuid.FromString(vv)
+				if err == nil {
+					privileges.PrivilegeIDs = append(privileges.PrivilegeIDs, id)
+				}
+			}
+		}
+	}
 	verrs, err := tx.ValidateAndUpdate(administrator)
 	if err != nil {
 		return errors.WithStack(err)
+	}
+	// privilege handler part - if we have the ids, we update them, else delete them.
+	// TODO check that the current admin that does this action has priv for updating privs or not.
+	var privErr error
+	if len(privileges.PrivilegeIDs) > 0 {
+		_, privErr = privileges.Update(tx)
+	} else {
+		_, privErr = privileges.Delete(tx)
+	}
+
+	if privErr != nil {
+		return errors.WithStack(privErr)
 	}
 
 	if verrs.HasAny() {
