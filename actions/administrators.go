@@ -4,6 +4,7 @@ import (
 	"github.com/akosgarai/buffalo_example/models"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/uuid"
 	"github.com/pkg/errors"
 )
 
@@ -74,12 +75,62 @@ func (v AdministratorsResource) Show(c buffalo.Context) error {
 // New renders the form for creating a new Administrator.
 // This function is mapped to the path GET /administrators/new
 func (v AdministratorsResource) New(c buffalo.Context) error {
+	// Check the current admin's privs.
+	currentAdmin := c.Data()["current_admin"].(*models.Administrator)
+	if !currentAdmin.HasPrivFor("Users") {
+		c.Flash().Add("danger", "You must have < Users > privilege to see that page")
+		return c.Redirect(302, "/administrators/")
+	}
+	// Get the DB connection from the context
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return errors.WithStack(errors.New("no transaction found"))
+	}
+	// Allocate empty privileges
+	privileges := &models.Privileges{}
+	// Get all privs with pop
+	tx.All(privileges)
+	// Pass it to context
+	c.Set("privileges", privileges)
 	return c.Render(200, r.Auto(c, &models.Administrator{}))
 }
 
 // Create adds a Administrator to the DB. This function is mapped to the
 // path POST /administrators
 func (v AdministratorsResource) Create(c buffalo.Context) error {
+
+	currentAdmin := c.Data()["current_admin"].(*models.Administrator)
+	if !currentAdmin.HasPrivFor("Users") {
+		c.Flash().Add("danger", "You must have < Users > privilege to see that page")
+		return c.Redirect(302, "/administrators/")
+	}
+	// Get the DB connection from the context
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return errors.WithStack(errors.New("no transaction found"))
+	}
+
+	// Allocate empty privileges
+	var privileges models.Privileges
+	// Check the current admin's privs.
+	if currentAdmin.HasPrivFor("Privileges") {
+		req := c.Request()
+		if err := req.ParseForm(); err == nil {
+			for k, v := range req.Form {
+				if k != "privilege_id" {
+					continue
+				}
+				for _, vv := range v {
+					priv := models.Privilege{}
+					err := tx.Find(&priv, vv)
+					if err == nil {
+						privileges = append(privileges, priv)
+					}
+				}
+			}
+		}
+	}
+
 	// Allocate an empty Administrator
 	administrator := &models.Administrator{}
 
@@ -88,10 +139,9 @@ func (v AdministratorsResource) Create(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 
-	// Get the DB connection from the context
-	tx, ok := c.Value("tx").(*pop.Connection)
-	if !ok {
-		return errors.WithStack(errors.New("no transaction found"))
+	// if we have privs in the request, we need to add it to the admin struct.
+	if len(privileges) > 0 {
+		administrator.Privs = privileges
 	}
 
 	// Validate the data from the html form
@@ -108,7 +158,6 @@ func (v AdministratorsResource) Create(c buffalo.Context) error {
 		// correct the input.
 		return c.Render(422, r.Auto(c, administrator))
 	}
-	c.Session().Set("current_admin_id", administrator.ID)
 
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Administrator was created successfully")
@@ -120,6 +169,11 @@ func (v AdministratorsResource) Create(c buffalo.Context) error {
 // Edit renders a edit form for a Administrator. This function is
 // mapped to the path GET /administrators/{administrator_id}/edit
 func (v AdministratorsResource) Edit(c buffalo.Context) error {
+	currentAdmin := c.Data()["current_admin"].(*models.Administrator)
+	if !currentAdmin.HasPrivFor("Users") {
+		c.Flash().Add("danger", "You must have < Users > privilege to see that page")
+		return c.Redirect(302, "/administrators/")
+	}
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
@@ -132,6 +186,13 @@ func (v AdministratorsResource) Edit(c buffalo.Context) error {
 	if err := tx.Find(administrator, c.Param("administrator_id")); err != nil {
 		return c.Error(404, err)
 	}
+	tx.Load(administrator)
+	// Allocate empty privileges
+	privileges := &models.Privileges{}
+	// Get all privs with pop
+	tx.All(privileges)
+	// Pass it to context
+	c.Set("privileges", privileges)
 
 	return c.Render(200, r.Auto(c, administrator))
 }
@@ -139,6 +200,11 @@ func (v AdministratorsResource) Edit(c buffalo.Context) error {
 // Update changes a Administrator in the DB. This function is mapped to
 // the path PUT /administrators/{administrator_id}
 func (v AdministratorsResource) Update(c buffalo.Context) error {
+	currentAdmin := c.Data()["current_admin"].(*models.Administrator)
+	if !currentAdmin.HasPrivFor("Users") {
+		c.Flash().Add("danger", "You must have < Users > privilege to see that page")
+		return c.Redirect(302, "/administrators/")
+	}
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
@@ -156,10 +222,41 @@ func (v AdministratorsResource) Update(c buffalo.Context) error {
 	if err := c.Bind(administrator); err != nil {
 		return errors.WithStack(err)
 	}
-
+	// Allocate empty privileges
+	privileges := models.AdminPrivs{
+		AdministratorID: administrator.ID,
+	}
+	req := c.Request()
+	if err := req.ParseForm(); err == nil {
+		for k, v := range req.Form {
+			if k != "privilege_id" {
+				continue
+			}
+			for _, vv := range v {
+				id, err := uuid.FromString(vv)
+				if err == nil {
+					privileges.PrivilegeIDs = append(privileges.PrivilegeIDs, id)
+				}
+			}
+		}
+	}
 	verrs, err := tx.ValidateAndUpdate(administrator)
 	if err != nil {
 		return errors.WithStack(err)
+	}
+	// privilege handler part - if we have the ids, we update them, else delete them.
+	// This part will be done, if the current admin has priv. for managing privs.
+	if currentAdmin.HasPrivFor("Privileges") {
+		var privErr error
+		if len(privileges.PrivilegeIDs) > 0 {
+			_, privErr = privileges.Update(tx)
+		} else {
+			_, privErr = privileges.Delete(tx)
+		}
+
+		if privErr != nil {
+			return errors.WithStack(privErr)
+		}
 	}
 
 	if verrs.HasAny() {
@@ -181,6 +278,11 @@ func (v AdministratorsResource) Update(c buffalo.Context) error {
 // Destroy deletes a Administrator from the DB. This function is mapped
 // to the path DELETE /administrators/{administrator_id}
 func (v AdministratorsResource) Destroy(c buffalo.Context) error {
+	currentAdmin := c.Data()["current_admin"].(*models.Administrator)
+	if !currentAdmin.HasPrivFor("Users") {
+		c.Flash().Add("danger", "You must have < Users > privilege to see that page")
+		return c.Redirect(302, "/administrators/")
+	}
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
@@ -217,6 +319,7 @@ func SetCurrentAdmin(next buffalo.Handler) buffalo.Handler {
 			if err != nil {
 				return errors.WithStack(err)
 			}
+			tx.Load(a)
 			c.Set("current_admin", a)
 		}
 		return next(c)

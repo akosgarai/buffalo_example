@@ -1,10 +1,11 @@
 <div class="page-header">
   <h1>Administrators</h1>
 </div>
+<%= if (adminHasPrivFor(current_admin.Privs, "Users")) { %>
 <ul class="list-unstyled list-inline">
   <li><a href="<%= newAdministratorsPath() %>" class="btn btn-primary">Create New Administrator</a></li>
 </ul>
-
+<% } %>
 <table class="table table-striped">
   <thead>
   <th>Name</th>
@@ -21,8 +22,10 @@
         <td>
           <div class="pull-right">
             <a href="<%= administratorPath({ administrator_id: administrator.ID }) %>" class="btn btn-info">View</a>
+            <%= if (adminHasPrivFor(current_admin.Privs, "Users")) { %>
             <a href="<%= editAdministratorPath({ administrator_id: administrator.ID }) %>" class="btn btn-warning">Edit</a>
             <a href="<%= administratorPath({ administrator_id: administrator.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+            <% } %>
           </div>
         </td>
       </tr>

@@ -2,7 +2,11 @@
   <h1>Edit Administrator</h1>
 </div>
 
-<%= form_for(administrator, {action: administratorPath({ administrator_id: administrator.ID }), method: "PUT"}) { %>
-  <%= partial("administrators/form.html") %>
-  <a href="<%= administratorPath({ administrator_id: administrator.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<%= if (adminHasPrivFor(current_admin.Privs, "Users")) { %>
+    <%= form_for(administrator, {action: administratorPath({ administrator_id: administrator.ID }), method: "PUT"}) { %>
+      <%= partial("administrators/form.html") %>
+      <a href="<%= administratorPath({ administrator_id: administrator.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+    <% } %>
+<% } else { %>
+    <%= partial("administrators/no_priv.html") %>
 <% } %>

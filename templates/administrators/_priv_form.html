@@ -1,0 +1,12 @@
+<p>
+Setup privileges
+</p>
+<pre><%= privileges %></pre>
+<pre><%= administrator %></pre>
+<%= for (privilege) in privileges { %>
+    <%= if (adminHasPrivFor(administrator.Privs, privilege.Label)) { %>
+        <%= f.CheckboxTag("privilege_id", {label: privilege.Label, checked: privilege.ID, id:privilege.ID, value: privilege.ID}) %>
+    <% } else { %>
+        <%= f.CheckboxTag("privilege_id", {label: privilege.Label, checked: privilege.ID, id:privilege.ID}) %>
+    <% } %>
+<% } %>

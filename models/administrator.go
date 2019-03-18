@@ -40,6 +40,20 @@ func (a *Administrator) Create(tx *pop.Connection) (*validate.Errors, error) {
 	return tx.ValidateAndCreate(a)
 }
 
+// HasPrivFor function returns true, if the Admin has priv. with the given label.
+// Any other cases it returns false
+func (a *Administrator) HasPrivFor(priv string) bool {
+	if priv == "" {
+		return false
+	}
+	for _, p := range a.Privs {
+		if p.Label == priv {
+			return true
+		}
+	}
+	return false
+}
+
 // String is not required by pop and may be deleted
 func (a Administrator) String() string {
 	ja, _ := json.Marshal(a)
