@@ -158,8 +158,6 @@ func (v AdministratorsResource) Create(c buffalo.Context) error {
 		// correct the input.
 		return c.Render(422, r.Auto(c, administrator))
 	}
-	// don't need to update the admin session.
-	//c.Session().Set("current_admin_id", administrator.ID)
 
 	// If there are no errors set a success message
 	c.Flash().Add("success", "Administrator was created successfully")
@@ -247,16 +245,18 @@ func (v AdministratorsResource) Update(c buffalo.Context) error {
 		return errors.WithStack(err)
 	}
 	// privilege handler part - if we have the ids, we update them, else delete them.
-	// TODO check that the current admin that does this action has priv for updating privs or not.
-	var privErr error
-	if len(privileges.PrivilegeIDs) > 0 {
-		_, privErr = privileges.Update(tx)
-	} else {
-		_, privErr = privileges.Delete(tx)
-	}
+	// This part will be done, if the current admin has priv. for managing privs.
+	if currentAdmin.HasPrivFor("Privileges") {
+		var privErr error
+		if len(privileges.PrivilegeIDs) > 0 {
+			_, privErr = privileges.Update(tx)
+		} else {
+			_, privErr = privileges.Delete(tx)
+		}
 
-	if privErr != nil {
-		return errors.WithStack(privErr)
+		if privErr != nil {
+			return errors.WithStack(privErr)
+		}
 	}
 
 	if verrs.HasAny() {
