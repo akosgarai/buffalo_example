@@ -4,66 +4,77 @@ import (
 	"github.com/akosgarai/buffalo_example/models"
 )
 
+func getTestAdmin() *models.Administrator {
+	return &models.Administrator{
+		Email:           "test-admin@admin.com",
+		Password:        "admin",
+		Pwd:             "admin",
+		PwdConfirmation: "admin",
+		Name:            "test admin",
+		Username:        "testAdmin",
+	}
+}
+func getTestAdminWithBadPassword() *models.Administrator {
+	return &models.Administrator{
+		Email:    "test-admin@admin.com",
+		Password: "bad",
+	}
+}
 func (as *ActionSuite) Test_Auth_New() {
-	res := as.HTML("/signin").Get()
+	res := as.HTML("/login").Get()
 	as.Equal(200, res.Code)
 	as.Contains(res.Body.String(), "Sign In")
+	as.Contains(res.Body.String(), "Sign In!")
+	as.Contains(res.Body.String(), "Email")
+	as.Contains(res.Body.String(), "Pwd")
 }
 
-func (as *ActionSuite) Test_Auth_Create() {
-	u := &models.Administrator{
-		Email:           "mark@example.com",
-		Pwd:             "password",
-		PwdConfirmation: "password",
-	}
+func (as *ActionSuite) Test_Auth_Login() {
+	u := getTestAdmin()
+
 	verrs, err := u.Create(as.DB)
 	as.NoError(err)
 	as.False(verrs.HasAny())
 
-	res := as.HTML("/signin").Post(u)
+	res := as.HTML("/login").Post(u)
 	as.Equal(302, res.Code)
 	as.Equal("/", res.Location())
 }
 
-func (as *ActionSuite) Test_Auth_Create_Redirect() {
-	u := &models.Administrator{
-		Email:           "mark@example.com",
-		Pwd:             "password",
-		PwdConfirmation: "password",
-	}
+func (as *ActionSuite) Test_Auth_Login_Redirect() {
+	as.Session.Clear()
+	u := getTestAdmin()
+
 	verrs, err := u.Create(as.DB)
 	as.NoError(err)
 	as.False(verrs.HasAny())
 
-	as.Session.Set("redirectURL", "/some/url")
+	as.Session.Set("redirectURL", "/")
 
-	res := as.HTML("/signin").Post(u)
+	res := as.HTML("/login").Post(u)
 	as.Equal(302, res.Code)
-	as.Equal(res.Location(), "/some/url")
+	as.Equal(res.Location(), "/")
 }
 
-func (as *ActionSuite) Test_Auth_Create_UnknownUser() {
-	u := &models.Administrator{
-		Email:    "mark@example.com",
-		Password: "password",
-	}
-	res := as.HTML("/signin").Post(u)
+func (as *ActionSuite) Test_Auth_Login_UnknownUser() {
+	as.Session.Clear()
+	u := getTestAdmin()
+
+	res := as.HTML("/login").Post(u)
 	as.Equal(422, res.Code)
 	as.Contains(res.Body.String(), "invalid email/password")
 }
 
-func (as *ActionSuite) Test_Auth_Create_BadPassword() {
-	u := &models.Administrator{
-		Email:           "mark@example.com",
-		Pwd:             "password",
-		PwdConfirmation: "password",
-	}
+func (as *ActionSuite) Test_Auth_Login_BadPassword() {
+	u := getTestAdmin()
+
 	verrs, err := u.Create(as.DB)
 	as.NoError(err)
 	as.False(verrs.HasAny())
+	as.Session.Clear()
 
-	u.Password = "bad"
-	res := as.HTML("/signin").Post(u)
+	wrongAdmin := getTestAdminWithBadPassword()
+	res := as.HTML("/login").Post(wrongAdmin)
 	as.Equal(422, res.Code)
 	as.Contains(res.Body.String(), "invalid email/password")
 }
