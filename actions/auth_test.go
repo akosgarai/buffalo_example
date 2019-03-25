@@ -11,10 +11,10 @@ func (as *ActionSuite) Test_Auth_New() {
 }
 
 func (as *ActionSuite) Test_Auth_Create() {
-	u := &models.User{
-		Email:                "mark@example.com",
-		Password:             "password",
-		PasswordConfirmation: "password",
+	u := &models.Administrator{
+		Email:           "mark@example.com",
+		Pwd:             "password",
+		PwdConfirmation: "password",
 	}
 	verrs, err := u.Create(as.DB)
 	as.NoError(err)
@@ -26,10 +26,10 @@ func (as *ActionSuite) Test_Auth_Create() {
 }
 
 func (as *ActionSuite) Test_Auth_Create_Redirect() {
-	u := &models.User{
-		Email:                "mark@example.com",
-		Password:             "password",
-		PasswordConfirmation: "password",
+	u := &models.Administrator{
+		Email:           "mark@example.com",
+		Pwd:             "password",
+		PwdConfirmation: "password",
 	}
 	verrs, err := u.Create(as.DB)
 	as.NoError(err)
@@ -43,7 +43,7 @@ func (as *ActionSuite) Test_Auth_Create_Redirect() {
 }
 
 func (as *ActionSuite) Test_Auth_Create_UnknownUser() {
-	u := &models.User{
+	u := &models.Administrator{
 		Email:    "mark@example.com",
 		Password: "password",
 	}
@@ -53,10 +53,10 @@ func (as *ActionSuite) Test_Auth_Create_UnknownUser() {
 }
 
 func (as *ActionSuite) Test_Auth_Create_BadPassword() {
-	u := &models.User{
-		Email:                "mark@example.com",
-		Password:             "password",
-		PasswordConfirmation: "password",
+	u := &models.Administrator{
+		Email:           "mark@example.com",
+		Pwd:             "password",
+		PwdConfirmation: "password",
 	}
 	verrs, err := u.Create(as.DB)
 	as.NoError(err)
