@@ -12,4 +12,4 @@ buffalo_example
 .vscode/
 .grifter/
 .env
-*.swp
+*.sw[op]
