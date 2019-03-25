@@ -78,3 +78,17 @@ func (as *ActionSuite) Test_Auth_Login_BadPassword() {
 	as.Equal(422, res.Code)
 	as.Contains(res.Body.String(), "invalid email/password")
 }
+
+func (as *ActionSuite) Test_Auth_Logout() {
+	u := getTestAdmin()
+	verrs, err := u.Create(as.DB)
+	as.NoError(err)
+	as.False(verrs.HasAny())
+	res := as.HTML("/login").Post(u)
+	as.Equal(302, res.Code)
+	as.Equal(res.Location(), "/")
+
+	res = as.HTML("/logout").Get()
+	as.Equal(302, res.Code)
+	as.Equal(res.Location(), "/login")
+}
