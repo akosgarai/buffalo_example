@@ -7,6 +7,7 @@ func (as *ActionSuite) Test_HomeHandler() {
 	// Should redirect to /login page
 	as.Equal(302, res.Code)
 	as.Contains(res.Body.String(), "<a href=\"/login\">Found</a>")
+	as.Equal(res.Location(), "/login")
 }
 
 func (as *ActionSuite) Test_HomeHandler_LoggedIn() {
@@ -32,4 +33,5 @@ func (as *ActionSuite) Test_HomeHandler_LoggedIn() {
 	res = as.HTML("/").Get()
 	as.Equal(302, res.Code)
 	as.Contains(res.Body.String(), "<a href=\"/login\">Found</a>")
+	as.Equal(res.Location(), "/login")
 }
