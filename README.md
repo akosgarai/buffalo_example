@@ -140,6 +140,11 @@ $ buffalo dev
 
 If you point your browser to [http://127.0.0.1:3000](http://127.0.0.1:3000) you should be redirected to the [http://127.0.0.1:3000/login](http://127.0.0.1:3000/login) page.
 
+# About the tests
 
+Good to know
+
+- Use the built in tool: `buffalo test`
+- Don't be logged in to the database when you want to run the tests
 
 [Powered by Buffalo](http://gobuffalo.io)
