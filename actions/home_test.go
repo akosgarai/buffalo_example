@@ -27,6 +27,7 @@ func (as *ActionSuite) Test_HomeHandler_LoggedIn() {
 	res := as.HTML("/").Get()
 	as.Equal(200, res.Code)
 	as.Contains(res.Body.String(), "logout")
+	//TODO more test for contents
 
 	as.Session.Clear()
 	// Should redirect to /login page
