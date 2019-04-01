@@ -15,6 +15,26 @@ func getTestAdmin() *models.Administrator {
 		Username:        "testAdmin",
 	}
 }
+func getTestAdminWithPriv(email string, privName string) *models.Administrator {
+	var privList models.Privileges
+	if privName == "Privileges" || privName == "All" {
+		uid, _ := uuid.FromString("d65b85e0-a5ac-492a-92c9-9040bba1a981")
+		privList = append(privList, models.Privilege{ID: uid})
+	}
+	if privName == "Users" || privName == "All" {
+		uid, _ := uuid.FromString("3d41e152-7f33-49e6-829e-411446d495e8")
+		privList = append(privList, models.Privilege{ID: uid})
+	}
+	return &models.Administrator{
+		Email:           email,
+		Password:        "admin",
+		Pwd:             "admin",
+		PwdConfirmation: "admin",
+		Name:            "test admin",
+		Username:        "testAdmin",
+		Privs:           privList,
+	}
+}
 func getTestAdminWithPrivs() *models.Administrator {
 	var privList models.Privileges
 	uid, _ := uuid.FromString("3d41e152-7f33-49e6-829e-411446d495e8")
