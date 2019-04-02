@@ -1,7 +1,17 @@
 package models
 
-import "testing"
-
-func Test_Privilege(t *testing.T) {
-	t.Fatal("This test needs to be implemented!")
+func (ms *ModelSuite) Test_Privilege_String() {
+	ms.Fail("Not Implemented!")
+}
+func (ms *ModelSuite) Test_Privileges_String() {
+	ms.Fail("Not Implemented!")
+}
+func (ms *ModelSuite) Test_Privilege_Validate() {
+	ms.Fail("Not Implemented!")
+}
+func (ms *ModelSuite) Test_Privilege_Validate_Create() {
+	ms.Fail("Not Implemented!")
+}
+func (ms *ModelSuite) Test_Privilege_Validate_Update() {
+	ms.Fail("Not Implemented!")
 }
