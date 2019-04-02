@@ -1,7 +1,5 @@
 package models
 
-import "testing"
-
-func Test_Administrator(t *testing.T) {
-	t.Fatal("This test needs to be implemented!")
+func (ms *ModelSuite) Test_Administrators() {
+	ms.Fail("Not Implemented!")
 }
