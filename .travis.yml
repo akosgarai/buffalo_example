@@ -1,0 +1,24 @@
+language: go
+
+services:
+    - postgresql
+
+addons:
+      postgresql: "9.5"
+
+before_install:
+    - psql -c "CREATE USER buffalo WITH SUPERUSER PASSWORD 'buffalo';"
+
+install:
+    - curl -OL https://github.com/gobuffalo/buffalo/releases/download/v0.14.2/buffalo_0.14.2_linux_amd64.tar.gz
+    - tar -xvzf buffalo_0.14.2_linux_amd64.tar.gz
+    - sudo mv buffalo /usr/local/bin/buffalo
+    - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+    - dep ensure
+    - go get github.com/gobuffalo/pop/...
+    - go install github.com/gobuffalo/pop/soda
+    - soda drop -a
+    - soda create -a
+
+script:
+    - buffalo test
