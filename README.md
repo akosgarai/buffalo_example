@@ -1,5 +1,7 @@
 # Experimental CMS with Buffalo!
 
+[![Build Status](https://api.travis-ci.org/akosgarai/buffalo_example.svg?branch=master)](https://travis-ci.org/akosgarai/buffalo\_example)
+
 CMS project. Administrator/content/user management tool. Experimental project.
 
 # Start project from scratch
