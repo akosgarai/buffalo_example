@@ -128,7 +128,7 @@ In psql shell, you are able to create users/databases, so that you can setup eve
 Before the first start, you have to setup the database that contains the necessary tables, and the initial values (eg admins).
 
 ```bash
-$ buffalo db create -a
+$ soda create -a
 $ soda migrate up
 ```
 
