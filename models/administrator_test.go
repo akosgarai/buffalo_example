@@ -1,14 +1,14 @@
 package models
 
-func (ms *ModelSuite) Test_Administrators_String() {
+func (ms *ModelSuite) Test_Administrator_String() {
 	var admin Administrator
 	ms.Equal("{\"id\":\"00000000-0000-0000-0000-000000000000\",\"created_at\":\"0001-01-01T00:00:00Z\",\"updated_at\":\"0001-01-01T00:00:00Z\",\"name\":\"\",\"username\":\"\",\"password\":\"\",\"email\":\"\",\"Privs\":null}", admin.String())
 }
-func (ms *ModelSuite) Test_Administrator_Empty_String() {
+func (ms *ModelSuite) Test_Administrators_Empty_String() {
 	admins := &Administrators{}
 	ms.Equal("[]", admins.String())
 }
-func (ms *ModelSuite) Test_Administrator_Not_Empty_String() {
+func (ms *ModelSuite) Test_Administrators_Not_Empty_String() {
 	var admin Administrator
 	var admins Administrators
 	admins = append(admins, admin)
