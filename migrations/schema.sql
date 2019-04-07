@@ -91,21 +91,6 @@ CREATE TABLE public.schema_migration (
 ALTER TABLE public.schema_migration OWNER TO buffalo;
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: buffalo
---
-
-CREATE TABLE public.users (
-    id uuid NOT NULL,
-    email character varying(255) NOT NULL,
-    password_hash character varying(255) NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
-ALTER TABLE public.users OWNER TO buffalo;
-
---
 -- Name: admin_privs_pkey; Type: CONSTRAINT; Schema: public; Owner: buffalo
 --
 
@@ -127,14 +112,6 @@ ALTER TABLE ONLY public.administrators
 
 ALTER TABLE ONLY public.privileges
     ADD CONSTRAINT privileges_pkey PRIMARY KEY (id);
-
-
---
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: buffalo
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
 --

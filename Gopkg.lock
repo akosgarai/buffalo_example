@@ -830,8 +830,13 @@
     "github.com/gobuffalo/packr",
     "github.com/gobuffalo/pop",
     "github.com/gobuffalo/suite",
+    "github.com/gobuffalo/uuid",
+    "github.com/gobuffalo/validate",
+    "github.com/gobuffalo/validate/validators",
     "github.com/markbates/grift/grift",
+    "github.com/pkg/errors",
     "github.com/unrolled/secure",
+    "golang.org/x/crypto/bcrypt",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

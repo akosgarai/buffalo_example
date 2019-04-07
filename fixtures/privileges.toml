@@ -1,0 +1,20 @@
+[[scenario]]
+name = "insert privileges"
+  [[scenario.table]]
+    name = "privileges"
+
+    [[scenario.table.row]]
+      id = "d65b85e0-a5ac-492a-92c9-9040bba1a981"
+      label = "Privileges"
+      description = "Options to grant or revoke privileges for an admin"
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+    [[scenario.table.row]]
+      id = "3d41e152-7f33-49e6-829e-411446d495e8"
+      label = "Users"
+      description = "Option to manage the administrators in the system."
+      created_at = "<%= now() %>"
+      updated_at = "<%= now() %>"
+
+
