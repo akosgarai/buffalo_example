@@ -1,0 +1,10 @@
+create_table("admin_roles") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("label", "text", {})
+	t.Column("description", "text", {})
+}
+sql("insert into admin_roles (id, label, description) VALUES('a38ead89-39f1-443b-9326-1469949280a5','content_writer', 'Content writer administrator role');")
+sql("insert into admin_roles (id, label, description) VALUES('228b837e-3ed4-4bf8-88d2-773e1710a46e','content_reviewer', 'Content reviewer administrator role');")
+sql("insert into admin_roles (id, label, description) VALUES('9d337253-ff93-4445-a30b-3772e8bcd0cf','user_moderator', 'User moderator administrator administrator role');")
+sql("insert into admin_roles (id, label, description) VALUES('54ea7725-a882-4e2c-88fd-6ee579b740b7','sys_admin', 'System administrator role');")
+sql("insert into admin_roles (id, label, description) VALUES('268a0bb7-9151-4da0-9eb7-47874ce12e05','root', 'Root administrator role');")
