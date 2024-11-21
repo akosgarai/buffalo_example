@@ -188,9 +188,13 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:4a67d4014d426b5a5672ed7c3bbb2bc732f754013bfca7a5a80ad65836b73727"
+  digest = "1:7779ec172ea5898029020425bf58586c68c341fe4c3c23c2508605767de3ce47"
   name = "github.com/gobuffalo/gogen"
-  packages = ["gomods"]
+  packages = [
+    ".",
+    "goimports",
+    "gomods",
+  ]
   pruneopts = "UT"
   revision = "8f38393713f59beb43221f903c07f58f0377a063"
 
@@ -283,9 +287,16 @@
   revision = "a385830c7fc0495b810318788a043c7655da337d"
 
 [[projects]]
-  digest = "1:3b7665270f828e8305a8d184e9c58a104124b4469437a5415ad9fcceb53b1485"
+  digest = "1:84d1d205888c2f666c0a4d489e2a6e66c39fe8fd8bfd118c51b81f80230be51b"
   name = "github.com/gobuffalo/packr"
-  packages = ["."]
+  packages = [
+    "v2",
+    "v2/file",
+    "v2/file/resolver",
+    "v2/file/resolver/encoding/hex",
+    "v2/jam/parser",
+    "v2/plog",
+  ]
   pruneopts = "UT"
   revision = "cef464b1513d9b6cf3d4ad6d6983a716e048e89d"
   version = "v2.1.0"
@@ -814,6 +825,27 @@
   revision = "4b34438f7a67ee5f45cc6132e2bad873a20324e9"
 
 [[projects]]
+  branch = "master"
+  digest = "1:37a10ef0ba5126e0459bf3644213c664babe7a04e39fd4c292f8f5d130820990"
+  name = "golang.org/x/tools"
+  packages = [
+    "go/ast/astutil",
+    "go/gcexportdata",
+    "go/internal/gcimporter",
+    "go/internal/packagesdriver",
+    "go/packages",
+    "go/types/typeutil",
+    "imports",
+    "internal/fastwalk",
+    "internal/gopathwalk",
+    "internal/imports",
+    "internal/module",
+    "internal/semver",
+  ]
+  pruneopts = "UT"
+  revision = "7be61e1b0e514e106d83fc439d56a79143738603"
+
+[[projects]]
   digest = "1:c25289f43ac4a68d88b02245742347c94f1e108c534dda442188015ff80669b3"
   name = "google.golang.org/appengine"
   packages = ["cloudsql"]
@@ -841,7 +873,7 @@
     "github.com/gobuffalo/mw-forcessl",
     "github.com/gobuffalo/mw-i18n",
     "github.com/gobuffalo/mw-paramlogger",
-    "github.com/gobuffalo/packr",
+    "github.com/gobuffalo/packr/v2",
     "github.com/gobuffalo/pop",
     "github.com/gobuffalo/suite",
     "github.com/gobuffalo/uuid",
